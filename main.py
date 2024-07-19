@@ -11,7 +11,7 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")  # Run headless Chrome (without GUI)
 
 # Initialize the WebDriver (ChromeDriver in this case)
-driver = webdriver.Chrome()
+# driver = webdriver.Chrome()
 
 def findEle(ele):
     return driver.find_element(By.XPATH, ele)
@@ -84,15 +84,34 @@ urls = [
 ]
 
 # Scrape information from each URL
-fraternities_info = scrape_fraternities(urls)
+# fraternities_info = scrape_fraternities(urls)
 
 # Write the dictionary to a JSON file
-with open('greek_info.json', 'w') as json_file:
-    json.dump(fraternities_info, json_file, indent=4)
+# with open('greek_info.json', 'w') as json_file:
+#     json.dump(fraternities_info, json_file, indent=4)
 
 # Close the WebDriver
-driver.quit()
+# driver.quit()
 
-
+def clean_keys(urls):
+    final_list = []
+    frat = "fraternity"
+    soro = "sorority"
+    for url in urls:
+        if frat in url or soro in url:
+            url_list = url.split("/")
+            corrected_list = url_list[6]
+            print(corrected_list)
+            final_list.append(corrected_list.replace("-"," "))
+    print(final_list)        
+final_list = clean_keys(urls=urls)
+with open("greek_info.json", "r+")as data:
+    f = json.load(data)
+    
+x = 0
+for key in urls:
+    f[key] = final_list[x]
+    x += 1
+    print(f[key])
 #TODO Change this to using bs4 for less overhead and time consumption
 #TODO create clean function to append the names of frats or soros instead of url
